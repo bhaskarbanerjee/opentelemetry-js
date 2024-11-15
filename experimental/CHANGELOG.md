@@ -7,6 +7,75 @@ All notable changes to experimental packages in this project will be documented 
 
 ### :boom: Breaking Change
 
+* feat(instrumentation-http)!: reduce public API surface by removing exports and making protected methods private [#5124](https://github.com/open-telemetry/opentelemetry-js/pull/5124) @pichlermarc
+  * (user-facing) the following exports were intended for internal use only and have been removed without replacement
+    * extractHostnameAndPort
+    * getAbsoluteUrl
+    * getIncomingRequestAttributes
+    * getIncomingRequestAttributesOnResponse
+    * getIncomingRequestMetricAttributes
+    * getIncomingRequestMetricAttributesOnResponse
+    * getOutgoingRequestAttributes
+    * getOutgoingRequestAttributesOnResponse
+    * getOutgoingRequestMetricAttributes
+    * getOutgoingRequestMetricAttributesOnResponse
+    * getRequestInfo
+    * headerCapture
+    * isCompressed
+    * isValidOptionsType
+    * parseResponseStatus
+    * satisfiesPattern
+    * setAttributesFromHttpKind
+    * setRequestContentLengthAttribute
+    * setResponseContentLengthAttribute
+    * setSpanWithError
+    * RequestSignature
+    * RequestFunction
+    * ParsedRequestOptions
+    * IgnoreMatcher
+    * Https
+    * HttpRequestArgs
+    * HttpCallbackOptional
+    * HttpCallback
+    * Http
+    * GetFunction
+    * Func
+    * Err
+
+### :rocket: (Enhancement)
+
+* feat(sdk-node, sdk-logs): add `mergeResourceWithDefaults` flag, which allows opting-out of resources getting merged with the default resource [#4617](https://github.com/open-telemetry/opentelemetry-js/pull/4617)
+  * default: `true`
+  * note: `false` will become the default behavior in a future iteration in order to comply with [specification requirements](https://github.com/open-telemetry/opentelemetry-specification/blob/f3511a5ccda376dfd1de76dfa086fc9b35b54757/specification/resource/sdk.md?plain=1#L31-L36)
+* feat(instrumentation): Track request body size in XHR and Fetch instrumentations [#4706](https://github.com/open-telemetry/opentelemetry-js/pull/4706) @mustafahaddara
+
+### :bug: (Bug Fix)
+
+* fix(instrumentation-http): Fix the `OTEL_SEMCONV_STABILITY_OPT_IN` variable check. Using `of` instead of `in` [#5137](https://github.com/open-telemetry/opentelemetry-js/pull/5137)
+
+* fix(instrumentation-http): drop url.parse in favor of URL constructor [#5091](https://github.com/open-telemetry/opentelemetry-js/pull/5091) @pichlermarc
+  * fixes a bug where using cyrillic characters in a client request string URL would throw an exception, whereas an un-instrumented client would accept the same input without throwing an exception
+
+### :books: (Refine Doc)
+
+### :house: (Internal)
+
+## 0.54.2
+
+### :bug: (Bug Fix)
+
+* fix(instrumentation): Fix wrapping ESM files with absolute path [#5094](https://github.com/open-telemetry/opentelemetry-js/pull/5094) @serkan-ozal
+
+## 0.54.1
+
+### :bug: (Bug Fix)
+
+* fix(instrumentation-http): skip malformed forwarded headers. [#5095](https://github.com/open-telemetry/opentelemetry-js/issues/5095) @pmlanger
+
+## 0.54.0
+
+### :boom: Breaking Change
+
 * feat(exporter-*-otlp-*)!: rewrite exporter config logic for testability [#4971](https://github.com/open-telemetry/opentelemetry-js/pull/4971) @pichlermarc
   * (user-facing) `getDefaultUrl` was intended for internal use has been removed from all exporters
   * (user-facing) `getUrlFromConfig` was intended for internal use and has been removed from all exporters
@@ -21,6 +90,10 @@ All notable changes to experimental packages in this project will be documented 
     * `appendResourcePathToUrlIfNeeded`
     * `configureExporterTimeout`
     * `invalidTimeout`
+* feat(instrumentation-http)!: remove long deprecated options [#5085](https://github.com/open-telemetry/opentelemetry-js/pull/5085) @pichlermarc
+  * `ignoreIncomingPaths` has been removed, use the more versatile `ignoreIncomingRequestHook` instead.
+  * `ignoreOutgoingUrls` has been removed, use the more versatile `ignoreOutgoingRequestHook` instead.
+  * `isIgnored` utility function was intended for internal use and has been removed without replacement.
 
 ### :rocket: (Enhancement)
 
@@ -49,8 +122,7 @@ All notable changes to experimental packages in this project will be documented 
     * `OTEL_EXPORTER_OTLP_LOGS_INSECURE`
 * fix(sdk-node): use warn instead of error on unknown OTEL_NODE_RESOURCE_DETECTORS values [#5034](https://github.com/open-telemetry/opentelemetry-js/pull/5034)
 * fix(exporter-logs-otlp-proto): Use correct config type in Node constructor
-
-### :books: (Refine Doc)
+* fix(instrumentation-http): Fix instrumentation of `http.get`, `http.request`, `https.get`, and `https.request` when used from ESM code and imported via the `import defaultExport from 'http'` style. [#5024](https://github.com/open-telemetry/opentelemetry-js/issues/5024) @trentm
 
 ### :house: (Internal)
 
